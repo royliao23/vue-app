@@ -93,7 +93,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+axios.defaults.withCredentials = true;
 const API_URL = import.meta.env.VITE_API_URL
+
+// const API_URL = import.meta.env.VITE_API_URL
 console.log('Env vars:', import.meta.env) 
 const posts = ref([])
 const loading = ref(false)
@@ -164,7 +167,7 @@ const updatePost = async () => {
     }
     
     // For existing posts, perform update
-    const response = await axios.put(`${API_URL}/${post.value.id}`, post.value)
+    const response = await axios.put(`${API_URL}${post.value.id}/`, post.value)
     
     // Update local state with server response
     const index = posts.value.findIndex(p => p.id === post.value.id)
@@ -189,7 +192,7 @@ const deletePost = async (id) => {
   try {
     // Don't try to delete temporary posts from server
     if (!id.toString().startsWith('temp-')) {
-      await axios.delete(`${API_URL}/${id}`)
+      await axios.delete(`${API_URL}${id}/`)
     }
     
     // Remove from local state in any case
